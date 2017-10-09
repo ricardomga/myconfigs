@@ -1,0 +1,175 @@
+for_window [class="^.*"] border pixel 0p
+
+set $mod Mod4
+
+font pango:Hack 11
+
+set $bg-color 	         #2f343f
+set $inactive-bg-color   #2f343f
+set $text-color          #f3f4f5
+set $inactive-text-color #676e7d
+set $urgent-bg-color     #e53935
+
+set $bg-color-t	         #2f343faa
+set $inactive-bg-color-t #2f343faa
+
+floating_modifier $mod
+
+bindsym $mod+Return exec termite
+
+bindsym $mod+q kill
+
+bindsym $mod+F10 exec ~/.config/i3/scripts/lock
+bindsym $mod+F11 exec reboot
+bindsym $mod+F12 exec shutdown now
+
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='dmenu -i -nb $bg-color -nf $inactive-text-color -sf $text-color -sb $inactive-bg-color -fn Hack -l 100'
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# split in horizontal orientation
+bindsym $mod+Shift+v split h
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+set $3 exec echo 1
+
+set $ws1 "1: web "
+set $ws2 "2: email  "
+set $ws3 "3: terminal "
+set $ws4 "4: code "
+set $ws5 "5: popcorn "
+set $ws6 "6: music "
+set $ws7 "7: images "
+set $ws10 "10: other things"
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+assign [class="Firefox"] $ws1
+assign [class="Thunderbird"] $ws2
+assign [class="Popcorn-Time"] $ws5
+assign [class="feh"] $ws7
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+mode "resize" {
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+bar
+{
+    height 34
+    i3bar_command i3bar -t
+    position top
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    colors
+    {
+	background $bg-color-t
+    	separator #757575
+	#                  border             background         text
+	focused_workspace  $bg-color-t        $bg-color-t         $text-color
+	inactive_workspace $inactive-bg-color-t $inactive-bg-color-t $inactive-text-color
+	urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+	}
+}
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+bindsym --release XF86AudioRaiseVolume exec pkill -RTMIN+1 i3blocks
+bindsym --release XF86AudioLowerVolume exec pkill -RTMIN+1 i3blocks
+bindsym --release XF86AudioMute exec pkill -RTMIN+1 i3blocks
+
+bindsym XF86MonBrightnessUp exec light -A 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec light -U 10 # decrease screen brightness
+
+bindsym Scroll_Lock exec mocp -U
+bindsym Pause exec mocp -P
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym XF86Calculator exec speedcrunch
+
+gaps inner 25
+gaps outer 15
+
+exec_always --no-startup-id feh --recursive --randomize --bg-scale ~/Pictures/Wallpappers/*
+bindsym $mod+Shift+w exec feh --recursive --randomize --bg-scale ~/Pictures/Wallpappers/*
+
+exec --no-startup-id redshift &
+exec --no-startup-id compton &
+
+exec_always setxkbmap pt -option ctrl:nocaps -option shift:both_capslock
+
+bindsym $mod+p exec ~/.config/i3/scripts/screenlayouts/vga_only
+bindsym $mod+Shift+p exec ~/.config/i3/scripts/screenlayouts/laptop_only
+
+bindsym $mod+insert --no-startup-id bash ~/.config/i3/scripts/screencast_pulse
+
+bindsym $mod+delete --no-startup-id killall ffmpeg & killall screenkey
+
+bindsym --release Print exec --no-startup-id "scrot '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/Pictures/Screenshots/; feh ~/Pictures/Screenshots/$f'"
+bindsym --release Shift+Print exec --no-startup-id "scrot -u '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/Pictures/Screenshots/ ; feh ~/Pictures/Screenshots/$f'"
+bindsym --release $mod+Print exec --no-startup-id "scrot -s '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/Pictures/Screenshots/ ; feh ~/Pictures/Screenshots/$f'"
+
