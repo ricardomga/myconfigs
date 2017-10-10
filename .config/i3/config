@@ -160,8 +160,6 @@ bindsym $mod+Shift+w exec feh --recursive --randomize --bg-scale ~/Pictures/Wall
 exec --no-startup-id redshift &
 exec --no-startup-id compton &
 
-exec_always setxkbmap pt -option ctrl:nocaps -option shift:both_capslock
-
 bindsym $mod+p exec ~/.config/i3/scripts/screenlayouts/vga_only
 bindsym $mod+Shift+p exec ~/.config/i3/scripts/screenlayouts/laptop_only
 
