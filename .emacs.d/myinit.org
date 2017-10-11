@@ -105,28 +105,31 @@
 
 * Color theme
 #+BEGIN_SRC emacs-lisp
-     (use-package color-theme
-        :ensure t)
-  ;   (use-package zenburn-theme
-    ;    :ensure t
-   ;     :config (load-theme 'zenburn t))
+  (use-package color-theme
+    :ensure t)
 
-   ;  (use-package material-theme
-    ;   :ensure t
-     ;  :config (load-theme 'material t))
+  (use-package color-theme-sanityinc-tomorrow
+    :ensure t
+    :config (load-theme 'sanityinc-tomorrow-eighties))
 
-  ;(use-package apropospriate-theme
-   ; :ensure t
-   ; :config 
-   ; (load-theme 'apropospriate-dark t))
-    ;; or
-  ;  (load-theme 'apropospriate-light t))
-  ;    (use-package base16-theme
-       ; :ensure t
-      ;  :config
-     ;   (load-theme 'base16-default-dark t))
+  ;; (use-package zenburn-theme
+  ;;   :ensure t
+  ;;   :config (load-theme 'zenburn t))
 
-    ;;  (load-theme 'leuven t)
+  ;; (use-package material-theme
+  ;;  :ensure t
+  ;;  :config (load-theme 'material t))
+
+  ;; (use-package apropospriate-theme
+  ;;   :ensure t
+  ;;   :config 
+  ;;   (load-theme 'apropospriate-dark t))
+  ;;   ;; (load-theme 'apropospriate-light t))
+
+  ;; (use-package base16-theme
+  ;;   :ensure t
+  ;;   :config
+  ;;   (load-theme 'base16-default-dark t))
 #+END_SRC
 
 * Toogle transparency
@@ -245,4 +248,36 @@
   (use-package ess
     :ensure t
     :init (require 'ess-site))
+#+END_SRC
+* Auctex
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    :defer t
+    :ensure t
+    :config
+    (setq TeX-PDF-mode t)
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+    (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+    (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    (setq reftex-plug-into-AUCTeX t))
+
+  (with-eval-after-load "tex"
+    (add-to-list 'TeX-view-program-list '("mupdf" "/usr/bin/mupdf %o"))
+    (setcdr (assq 'output-pdf TeX-view-program-selection) '("mupdf")))
+
+
+  (setq ispell-program-name "aspell")
+  ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
+  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=pt_PT"))
+
+#+END_SRC
+* Powerline
+#+BEGIN_SRC emacs-lisp
+  (use-package powerline
+    :ensure t
+    :config (powerline-center-theme))
 #+END_SRC
