@@ -108,9 +108,9 @@
   (use-package color-theme
     :ensure t)
 
-  (use-package color-theme-sanityinc-tomorrow
-    :ensure t
-    :config (load-theme 'sanityinc-tomorrow-eighties))
+  ;; (use-package color-theme-sanityinc-tomorrow
+  ;;   :ensure t
+  ;;   :config (load-theme 'sanityinc-tomorrow-eighties))
 
   ;; (use-package zenburn-theme
   ;;   :ensure t
@@ -275,9 +275,7 @@
   (setq ispell-extra-args '("--sug-mode=ultra" "--lang=pt_PT"))
 
 #+END_SRC
-* Powerline
+* Mode line 
 #+BEGIN_SRC emacs-lisp
-  (use-package powerline
-    :ensure t
-    :config (powerline-center-theme))
+(setq column-number-mode t)
 #+END_SRC
