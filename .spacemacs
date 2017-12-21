@@ -31,9 +31,10 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     python
      markdown
-     mu4e
+     typescript
+     html
+     javascript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -47,20 +48,13 @@ values."
      ;; markdown
      org
      (shell :variables
-            shell-default-height 35
+            shell-default-height 40
             shell-default-position 'bottom)
-     (spell-checking :variables
-                     spell-checking-enable-by-default nil)
-     syntax-checking
-     (latex :variables
-            latex-enable-folding t)
-     bibtex
-     php
-     ess
-     html
-     javascript
-     typescript
+     ;; spell-checking
+     ;; syntax-checking
      ;; version-control
+     ess
+     php
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -70,7 +64,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(ess-R-object-popup)
+   dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -145,17 +139,17 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Hack"
-                               :size 18
+                               :size 16
                                :weight normal
                                :width normal
-                               :powerline-scale 1.2)
+                               :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
    ;; (default "SPC")
    dotspacemacs-emacs-command-key "SPC"
    ;; The key used for Vim Ex commands (default ":")
-   dotspacemacs-ex-command-key "ç"
+   dotspacemacs-ex-command-key ":"
    ;; The leader key accessible in `emacs state' and `insert state'
    ;; (default "M-m")
    dotspacemacs-emacs-leader-key "M-m"
@@ -312,8 +306,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-
-
   )
 
 (defun dotspacemacs/user-config ()
@@ -323,64 +315,14 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
-  (setq ispell-program-name "aspell")
-  ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
-  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=pt_PT"))
-
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-
-  (with-eval-after-load "tex"
-    (add-to-list 'TeX-view-program-list '("mupdf" "/usr/bin/mupdf %o"))
-    (setcdr (assq 'output-pdf TeX-view-program-selection) '("mupdf")))
-
-  ;; (setq browse-url-browser-function 'browse-url-generic
-  ;;       browse-url-generic-program "chromium")
-
-  (add-hook 'LaTeX-mode-hook (lambda () (require 'org-ref)))
-
-  (require 'helm-bookmark)
-
-  (use-package editorconfig
-    :ensure t
-    :config
-    (editorconfig-mode 1))
-
-
-  (setq mu4e-account-alist
-    '(("gmail"
-        ;; Under each account, set the account-specific variables you want.
-        (mu4e-sent-folder "/Gmail/sent")
-        (user-mail-address "ricardo.mga24@gmail.com")
-        (smtpmail-smtp-user "ricardo.mga24")
-        (smtpmail-local-domain "gmail.com")
-        (smtpmail-default-smtp-server "smtp.gmail.com")
-        (smtpmail-smtp-server "smtp.gmail.com")
-        (smtpmail-smtp-service 587)
-
-        )
-       ("outlook"
-         (mu4e-sent-messages-behavior sent)
-         (mu4e-sent-folder "/Outlook/sent")
-         (user-mail-address "ricardomga@outlook.com")
-         (smtpmail-smtp-user "ricardomga.outlook.com")
-         (smtpmail-local-domain "outlook.com")
-         (smtpmail-smtp-server "smtp-mail.outlook.com")
-         (smtpmail-smtp-service 587))))
-  (mu4e/mail-account-reset)
-
-  (setq mu4e-maildir "~/Mail"
-    user-full-name "Ricardo Araújo"
-    mu4e-get-mail-command "offlineimap"
-    mu4e-trash-folder "/trash"
-    mu4e-refile-folder "/archive"
-    mu4e-drafts-folder "/drafts"
-    mu4e-update-interval nil
-    mu4e-compose-signature-auto-include nil
-    mu4e-view-show-images t
-    mu4e-view-show-addresses t)
-
-
+  (add-to-list 'auto-mode-alist '("\\.blade.php\\'" . web-mode))
+  (defun my-web-mode-hook ()
+    "Hooks for Web mode."
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-markup-indent-offset 2)
+    )
+  (add-hook 'web-mode-hook  'my-web-mode-hook)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -392,8 +334,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (mu4e-maildirs-extension mu4e-alert ht editorconfig yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc markdown-mode gh-md tide typescript-mode web-mode web-beautify tagedit slim-mode scss-mode sass-mode pug-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc helm-css-scss haml-mode emmet-mode company-web web-completion-data company-tern dash-functional tern coffee-mode phpunit phpcbf php-extras php-auto-yasnippets ess-smart-equals ess-R-data-view ctable ess julia-mode drupal-mode php-mode ranger org-ref pdf-tools key-chord ivy tablist helm-bibtex parsebib biblio biblio-core xterm-color smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download multi-term magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor eshell-z eshell-prompt-extras esh-help company-statistics company-auctex company auto-yasnippet yasnippet auctex-latexmk auctex ac-ispell auto-complete flyspell-correct-helm flyspell-correct auto-dictionary ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
- '(send-mail-function (quote mailclient-send-it)))
+    (ess-smart-equals ess-R-data-view ctable ess julia-mode mmm-mode markdown-toc markdown-mode gh-md tide typescript-mode flycheck web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode xterm-color smeargle shell-pop phpunit phpcbf php-extras php-auto-yasnippets orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download multi-term magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit magit-popup git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help drupal-mode php-mode company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

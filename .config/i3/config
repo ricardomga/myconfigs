@@ -23,7 +23,8 @@ bindsym $mod+F10 exec ~/.config/i3/scripts/lock
 bindsym $mod+F11 exec reboot
 bindsym $mod+F12 exec shutdown now
 
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='dmenu -i -nb $bg-color -nf $inactive-text-color -sf $text-color -sb $inactive-bg-color -fn Hack -l 100'
+#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='dmenu -i -nb $bg-color -nf $inactive-text-color -sf $text-color -sb $inactive-bg-color -fn Hack -l 100'
+bindsym $mod+d exec rofi -show drun
 
 # change focus
 bindsym $mod+h focus left
@@ -157,10 +158,9 @@ gaps outer 15
 exec_always --no-startup-id feh --recursive --randomize --bg-scale ~/Pictures/Wallpappers/*
 bindsym $mod+Shift+w exec feh --recursive --randomize --bg-scale ~/Pictures/Wallpappers/*
 
-exec --no-startup-id redshift &
 exec --no-startup-id compton &
 
-bindsym $mod+p exec ~/.config/i3/scripts/screenlayouts/vga_only
+bindsym $mod+p exec ~/.config/i3/scripts/screenlayouts/benq_only
 bindsym $mod+Shift+p exec ~/.config/i3/scripts/screenlayouts/laptop_only
 
 bindsym $mod+insert --no-startup-id bash ~/.config/i3/scripts/screencast_pulse
@@ -170,4 +170,3 @@ bindsym $mod+delete --no-startup-id killall ffmpeg & killall screenkey
 bindsym --release Print exec --no-startup-id "scrot '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/Pictures/Screenshots/; feh ~/Pictures/Screenshots/$f'"
 bindsym --release Shift+Print exec --no-startup-id "scrot -u '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/Pictures/Screenshots/ ; feh ~/Pictures/Screenshots/$f'"
 bindsym --release $mod+Print exec --no-startup-id "scrot -s '%Y-%m-%d_%H-%M-%S.png' -e 'mv $f ~/Pictures/Screenshots/ ; feh ~/Pictures/Screenshots/$f'"
-

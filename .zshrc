@@ -95,3 +95,5 @@ alias ec="emacsclient -c"
 alias ect="emacsclient -t"
 
 alias myconfigs="git --git-dir=$HOME/.myconfigs/ --work-tree=$HOME"
+
+export PAGER="most"
